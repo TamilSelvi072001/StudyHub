@@ -34,7 +34,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/hub/**").permitAll() // Allow public access to hub endpoints
+                        .requestMatchers("/hub/**").permitAll()
+                        .requestMatchers("/hubdetails/**").permitAll() // ✅ Add this line
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
