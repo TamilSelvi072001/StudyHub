@@ -9,5 +9,5 @@ public class HubResponse {
     private Long hubId;
     private String hubName;
     private String address;
-    private boolean availableOnDate;
+    private int availableSeats; // changed from boolean to int
 }
