@@ -30,5 +30,6 @@ public class Seat {
 
     // One seat can have many availability entries (one per date)
     @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Availability> availability;
+    private List<Availability> availabilities;  // <-- use plural here
+
 }

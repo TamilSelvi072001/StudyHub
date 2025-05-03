@@ -1,7 +1,7 @@
 package com.example.StudyHub.service;
 
+import com.example.StudyHub.dto.HubResponse;
 import com.example.StudyHub.model.Hub;
-import com.example.StudyHub.dto.HubAvailability;
 import com.example.StudyHub.repository.HubRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
@@ -16,23 +16,15 @@ public class HubService {
 
     private final HubRepository hubRepository;
 
-    public List<HubAvailability> getHubsByCityAndDate(String city, LocalDate date) {
-        List<Hub> hubs = hubRepository.findHubsWithAvailableSeatsByCityAndDate(city, date);
+    public List<HubResponse> getHubsWithAvailability(String city, LocalDate date) {
+        List<Hub> hubs = hubRepository.findAllHubsByCity(city);
 
         return hubs.stream().map(hub -> {
-            int availableSeats = hub.getTables().stream()
+            boolean hasAvailability = hub.getTables().stream()
                     .flatMap(table -> table.getSeats().stream())
-                    .mapToInt(seat ->
-                            (int) seat.getAvailability().stream()
-                                    .filter(a -> a.getDate().equals(date) && a.getIsAvailable())                                    .count()
-                    ).sum();
+                    .flatMap(seat -> seat.getAvailabilities().stream())
+                    .anyMatch(avail -> avail.getDate().equals(date) && avail.getIsAvailable());
 
-            return new HubAvailability(
-                    hub.getHubId(),
-                    hub.getHubName(),
-                    hub.getAddress(),
-                    (long) availableSeats
-            );
+            return new HubResponse(hub.getHubId(), hub.getHubName(), hub.getAddress(), hasAvailability);
         }).collect(Collectors.toList());
-    }
-}
+    }}

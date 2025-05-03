@@ -10,19 +10,6 @@ import java.util.List;
 
 public interface HubRepository extends JpaRepository<Hub, Long> {
 
-    @Query("""
-        SELECT h FROM Hub h
-        WHERE h.city.cityName = :city
-        AND EXISTS (
-            SELECT s FROM Seat s
-            JOIN s.table t
-            WHERE t.hub = h
-            AND EXISTS (
-                SELECT a FROM Availability a
-                WHERE a.seat = s AND a.date = :date AND a.isAvailable = true
-            )
-        )
-    """)
-    List<Hub> findHubsWithAvailableSeatsByCityAndDate(@Param("city") String city,
-                                                      @Param("date") LocalDate date);
+    @Query("SELECT h FROM Hub h WHERE h.city.cityName = :city")
+    List<Hub> findAllHubsByCity(@Param("city") String city);
 }

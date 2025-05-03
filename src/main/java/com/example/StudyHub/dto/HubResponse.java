@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class HubAvailability{
+public class HubResponse {
     private Long hubId;
     private String hubName;
     private String address;
-    private Long availableSeatCount;
+    private boolean availableOnDate;
 }

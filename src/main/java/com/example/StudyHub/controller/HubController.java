@@ -1,6 +1,6 @@
 package com.example.StudyHub.controller;
 
-import com.example.StudyHub.dto.HubAvailability;
+import com.example.StudyHub.dto.HubResponse;
 import com.example.StudyHub.service.HubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,10 +17,10 @@ public class HubController {
     private final HubService hubService;
 
     @GetMapping
-    public List<HubAvailability> getHubs(
+    public List<HubResponse> getHubs(
             @RequestParam String city,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
-        return hubService.getHubsByCityAndDate(city, date);
+        return hubService.getHubsWithAvailability(city, date);
     }
 }
