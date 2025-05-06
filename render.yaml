@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: springboot-api
+    env: java
+    buildCommand: mvn clean install
+    startCommand: java -jar target/StudyHub-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
