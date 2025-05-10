@@ -6,7 +6,6 @@ import com.example.StudyHub.model.User;
 import com.example.StudyHub.repository.RoleRepository;
 import com.example.StudyHub.repository.UserRepository;
 import com.example.StudyHub.security.JwtUtility;
-import jakarta.persistence.Entity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 

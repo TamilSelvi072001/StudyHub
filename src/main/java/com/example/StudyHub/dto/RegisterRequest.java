@@ -1,6 +1,5 @@
 package com.example.StudyHub.dto;
 
-import com.example.StudyHub.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

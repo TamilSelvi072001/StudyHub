@@ -1,7 +1,6 @@
 package com.example.StudyHub.controller;
 
 import com.example.StudyHub.security.JwtUtility;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
