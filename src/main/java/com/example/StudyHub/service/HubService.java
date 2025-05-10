@@ -59,7 +59,7 @@ public class HubService {
             // Debug: print the final available seat count for the hub
             System.out.println("Available seats for hub " + hub.getHubName() + ": " + availableSeats);
 
-            return new HubResponse(hub.getHubId(), hub.getHubName(), hub.getAddress(), availableSeats);
+            return new HubResponse(hub.getHubId(), hub.getHubName(), hub.getAddress(), hub.getCityName(),availableSeats);
         }).collect(Collectors.toList());
     }
 

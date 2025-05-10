@@ -27,6 +27,9 @@ public class Hub {
     @Column(nullable = false)
     private String address;
 
+    @Column
+    private String cityName;
+
     // Many hubs belong to one city
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id", nullable = false)

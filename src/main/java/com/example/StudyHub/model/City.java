@@ -1,4 +1,3 @@
-
 package com.example.StudyHub.model;
 
 import jakarta.persistence.*;
@@ -13,8 +12,8 @@ import java.util.List;
 @Table(name = "cities")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class City {
 
     @Id
@@ -27,4 +26,8 @@ public class City {
     // One city has many hubs
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Hub> hubs;
+
+    public City(String cityName) {
+        this.cityName = cityName;
+    }
 }
