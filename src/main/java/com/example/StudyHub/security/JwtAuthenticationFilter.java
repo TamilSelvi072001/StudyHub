@@ -16,8 +16,9 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private JwtUtility jwtUtility;
-    private CustomerUserDetailService customerUserDetailService;
+
+    private final JwtUtility jwtUtility;
+    private final CustomerUserDetailService customerUserDetailService;
 
     public JwtAuthenticationFilter(JwtUtility jwtUtility, CustomerUserDetailService customerUserDetailService) {
         this.jwtUtility = jwtUtility;
@@ -25,38 +26,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-
         String token = null;
-        String username = null;
+        String email = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7); // Remove "Bearer " prefix
-            System.out.println(jwtUtility.extractUserName(token));
+            token = authHeader.substring(7);
             try {
-                System.out.println(jwtUtility.extractUserName(token));
-                username = jwtUtility.extractUserName(token);
-
+                email = jwtUtility.extractEmail(token); // ✅ Use extractEmail instead
             } catch (Exception e) {
-                System.out.println("check");
                 System.out.println("Invalid JWT token: " + e.getMessage());
             }
         }
 
-        // Set authentication if username is valid and not already authenticated
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = customerUserDetailService.loadUserByUsername(email);
 
-            UserDetails userDetails=customerUserDetailService.loadUserByUsername(username);
-
-            // Token is valid
             if (jwtUtility.isValidToken(token)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        username, null, userDetails.getAuthorities());
+                        userDetails, null, userDetails.getAuthorities());
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

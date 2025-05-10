@@ -40,25 +40,31 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
-        if (userRepository.findByUserName(registerRequest.getUserName()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists!");
+
+
+        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email already exists!");
         }
 
+        if (userRepository.findByPhone(registerRequest.getPhone()).isPresent()) {
+            return ResponseEntity.badRequest().body("Phone number already exists!");
+        }
 
         User user = new User();
         user.setUserName(registerRequest.getUserName());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setEmail(registerRequest.getEmail());
+        user.setPhone(registerRequest.getPhone());
+        user.setDob(registerRequest.getDob());
 
-        Set<Role> roles=new HashSet<>();
+        Set<Role> roles = new HashSet<>();
         for (String roleStr : registerRequest.getRoles()) {
-            Role role = roleRepository.findByRoleType(roleStr) // Updated to match the correct repository method
+            Role role = roleRepository.findByRoleType(roleStr)
                     .orElseThrow(() -> new RuntimeException("Role not found: " + roleStr));
             roles.add(role);
         }
 
         user.setRole(roles);
-        userRepository.save(user);
-
         userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully");
@@ -70,13 +76,13 @@ public class AuthController {
             // Authenticate the user using AuthenticationManager
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUserName(),
+                            loginRequest.getEmail(),
                             loginRequest.getPassword()
                     )
             );
 
             // If authentication succeeds, generate JWT token
-            String token = jwtUtility.generateToken(loginRequest.getUserName());
+            String token = jwtUtility.generateToken(loginRequest.getEmail());
             System.out.print(token);
             return ResponseEntity.ok(token);
         } catch (Exception e) {

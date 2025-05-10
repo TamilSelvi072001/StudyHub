@@ -10,20 +10,29 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+
+@Entity
+@Table(name = "user")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-@Table(name = "user")
-@Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String userName;
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
-    private Set<Role> role=new HashSet<>();
 
+    @Column(unique = true)
+    private String email;
+
+    @Column(unique = true)
+    private String phone;
+
+    private String dob;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private Set<Role> role = new HashSet<>();
 }

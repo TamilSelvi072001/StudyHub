@@ -8,18 +8,16 @@ import lombok.Setter;
 
 import java.util.Set;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
 public class RegisterRequest {
-    private String fullName;
     private String email;
+    private String phone;
+    private String dob;
     private Set<String> roles;
     private String userName;
     private String password;
-
-
 }

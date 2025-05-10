@@ -18,70 +18,65 @@ import java.util.stream.Collectors;
 public class JwtUtility {
 
     private static final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512); // Secret key
-    private final int jwtExpirationTime = 86400000; // Token expiration in milliseconds (24 hours)
+    private final int jwtExpirationTime = 86400000; // 24 hours in milliseconds
     private final UserRepository userRepository;
 
     public JwtUtility(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public String generateToken(String userName) {
-        // Fetch user details safely
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
+    public String generateToken(String email) {
+        // Fetch user by email
+        Optional<User> optionalUser = userRepository.findByEmail(email);
 
         if (!optionalUser.isPresent()) {
-            throw new IllegalArgumentException("User not found with username: " + userName);
+            throw new IllegalArgumentException("User not found with email: " + email);
         }
 
         User user = optionalUser.get(); // Get the User object
         Set<Role> roles = user.getRole(); // Retrieve roles
 
-        // Build and return the JWT
-        System.out.println("Generating token for user: " + userName);
-        System.out.println("Signing Key: " + secretKey); // Logs the secret key used for signing
+        // Log info
+        System.out.println("Generating token for email: " + email);
+        System.out.println("Signing Key: " + secretKey);
 
         return Jwts.builder()
-                .setSubject(userName) // Add subject (username)
-                .claim("roles", roles.stream() // Add user roles as claims
+                .setSubject(email) // Subject is email now
+                .claim("roles", roles.stream()
                         .map(Role::getRoleType)
                         .collect(Collectors.joining(",")))
-                .setIssuedAt(new Date()) // Set the issue time
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationTime)) // Set expiration time
-                .signWith(secretKey) // Sign the JWT
-                .compact(); // Build the token
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationTime))
+                .signWith(secretKey)
+                .compact();
     }
 
-    public String extractUserName(String token){
-        System.out.println("Token received: " + token);
-        System.out.println("Signing Key: " + secretKey);
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
-                .getBody().getSubject();
+    public String extractEmail(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject(); // email is stored as subject
     }
 
     public Set<String> extractRoles(String token) {
-        System.out.println("Token received: " + token);
-        System.out.println("Signing Key: " + secretKey);
-
         String rolesString = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("roles", String.class); // Get the roles as a single comma-separated string
+                .get("roles", String.class);
 
-        // Split the roles and convert them into a Set
         return Set.of(rolesString.split(","));
     }
 
     public boolean isValidToken(String token) {
-        System.out.println("Token received: " + token);
-        System.out.println("Signing Key: " + secretKey);
-
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
-                    .parseClaimsJws(token); // Parses & validates signature and expiration
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
