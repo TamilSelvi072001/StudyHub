@@ -29,7 +29,7 @@ public class HubService {
             int availableSeats = (int) hub.getTables().stream()
                     .flatMap(table -> table.getSeats().stream()) // Flatten the seats for each table
                     .flatMap(seat -> seat.getAvailabilities().stream()) // Flatten the availabilities for each seat
-                    .filter(avail -> avail.getDate().equals(date) && Boolean.TRUE.equals(avail.getIsAvailable())) // Filter by the date and availability status
+                    .filter(avail -> avail.getDate().equals(date) && Boolean.TRUE.equals(avail.isAvailable())) // Filter by the date and availability status
                     .peek(avail -> System.out.println("Found availability: " + avail)) // Debug: print the availability data
                     .count();
 
@@ -48,7 +48,7 @@ public class HubService {
             hub.getTables().stream()
                     .flatMap(table -> table.getSeats().stream())
                     .forEach(seat -> seat.getAvailabilities().stream()
-                            .filter(avail -> avail.getDate().equals(date) && Boolean.FALSE.equals(avail.getIsAvailable())) // Seats that are unavailable on the given date
+                            .filter(avail -> avail.getDate().equals(date) && Boolean.FALSE.equals(avail.isAvailable())) // Seats that are unavailable on the given date
                             .forEach(avail -> {
                                 System.out.println("Not available seat: Table ID = " + seat.getTable().getTableId() +
                                         ", Seat Number = " + seat.getSeatNumber() +
@@ -73,7 +73,7 @@ public class HubService {
             List<SeatResponse> seatResponses = new ArrayList<>();
             for (Seat seat : table.getSeats()) {
                 boolean isAvailable = seat.getAvailabilities().stream()
-                        .anyMatch(a -> a.getDate().equals(LocalDate.now()) && a.getIsAvailable());
+                        .anyMatch(a -> a.getDate().equals(LocalDate.now()) && a.isAvailable());
                 seatResponses.add(new SeatResponse(seat.getSeatId(), isAvailable, seat.getSeatNumber()));            }
             tableDetails.add(new TableDetailsResponse(table.getTableId(), table.getTableNumber(), seatResponses));
         }
