@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class City {
 
     // One city has many hubs
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Hub> hubs;
+    private List<Hub> hubs = new ArrayList<>();
 
     public City(String cityName) {
         this.cityName = cityName;

@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "hub_tables")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class HubTable {
 
@@ -30,5 +30,12 @@ public class HubTable {
 
     // One table has many seats
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Seat> seats;
+    private List<Seat> seats = new ArrayList<>();
+
+    // Custom constructor without the collections to avoid circular references
+    public HubTable(Long tableId, String tableNumber, Hub hub) {
+        this.tableId = tableId;
+        this.tableNumber = tableNumber;
+        this.hub = hub;
+    }
 }

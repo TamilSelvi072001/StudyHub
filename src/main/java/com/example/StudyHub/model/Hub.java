@@ -1,19 +1,18 @@
 package com.example.StudyHub.model;
 
-import com.example.StudyHub.model.City;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "hubs")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Hub {
 
@@ -37,7 +36,14 @@ public class Hub {
 
     // One hub has many tables
     @OneToMany(mappedBy = "hub", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<HubTable> tables;
+    private List<HubTable> tables = new ArrayList<>();
 
-
+    // Custom constructor without the collections to avoid circular references
+    public Hub(Long hubId, String hubName, String address, String cityName, City city) {
+        this.hubId = hubId;
+        this.hubName = hubName;
+        this.address = address;
+        this.cityName = cityName;
+        this.city = city;
+    }
 }

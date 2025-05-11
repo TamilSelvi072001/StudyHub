@@ -1,23 +1,16 @@
 package com.example.StudyHub.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class TableDetailsResponse {
     private Long tableId;
-    private String tableNum;
+    private String tableNumber;
     private List<SeatResponse> seats;
-
-
-
-    public Long getTableId() {
-        return tableId;
-    }
-
-    public List<SeatResponse> getSeats() {
-        return seats;
-    }
 }
