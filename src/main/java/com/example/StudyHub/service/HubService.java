@@ -22,46 +22,41 @@ public class HubService {
     private final HubRepository hubRepository;
 
     public List<HubResponse> getHubsWithAvailability(String city, LocalDate date) {
-        List<Hub> hubs = hubRepository.findAllHubsByCity(city);
+        List<Hub> hubs = hubRepository.findAllHubsByCity(city); // Use your actual method here
 
         return hubs.stream().map(hub -> {
-            // Count the seats where there is an availability record and is available
+            // Step 1: Count available seats (true for given date)
             int availableSeats = (int) hub.getTables().stream()
-                    .flatMap(table -> table.getSeats().stream()) // Flatten the seats for each table
-                    .flatMap(seat -> seat.getAvailabilities().stream()) // Flatten the availabilities for each seat
-                    .filter(avail -> avail.getDate().equals(date) && Boolean.TRUE.equals(avail.isAvailable())) // Filter by the date and availability status
-                    .peek(avail -> System.out.println("Found availability: " + avail)) // Debug: print the availability data
+                    .flatMap(table -> table.getSeats().stream())
+                    .flatMap(seat -> seat.getAvailabilities().stream())
+                    .filter(avail -> avail.getDate().equals(date) && Boolean.TRUE.equals(avail.isAvailable()))
                     .count();
 
-            // Count seats that do not have any availability record for the given date (i.e., assume they are available)
+            // Step 2: Add seats with no availability record (assumed available)
             int seatsWithoutAvailability = (int) hub.getTables().stream()
                     .flatMap(table -> table.getSeats().stream())
                     .filter(seat -> seat.getAvailabilities().stream()
-                            .noneMatch(avail -> avail.getDate().equals(date))) // No availability record for the given date
-                    .peek(seat -> System.out.println("Found seat with no availability: " + seat.getSeatNumber())) // Debug: print seats with no availability data
+                            .noneMatch(avail -> avail.getDate().equals(date)))
                     .count();
 
-            // Add the number of seats without availability records to the available seats count
             availableSeats += seatsWithoutAvailability;
 
-            // Log unavailable seats for the given date (seats with availability records that are not available)
-            hub.getTables().stream()
-                    .flatMap(table -> table.getSeats().stream())
-                    .forEach(seat -> seat.getAvailabilities().stream()
-                            .filter(avail -> avail.getDate().equals(date) && Boolean.FALSE.equals(avail.isAvailable())) // Seats that are unavailable on the given date
-                            .forEach(avail -> {
-                                System.out.println("Not available seat: Table ID = " + seat.getTable().getTableId() +
-                                        ", Seat Number = " + seat.getSeatNumber() +
-                                        ", Date = " + avail.getDate());
-                            })
-                    );
+            // Step 3: Build image URL using hubId
+            int imageIndex = (int) (hub.getHubId() % 7) + 1; // rotates between 1–7
+            String imageUrl = "/images/space" + imageIndex + ".jpg";
 
-            // Debug: print the final available seat count for the hub
-            System.out.println("Available seats for hub " + hub.getHubName() + ": " + availableSeats);
-
-            return new HubResponse(hub.getHubId(), hub.getHubName(), hub.getAddress(), hub.getCityName(),availableSeats);
+            // Step 4: Return response
+            return new HubResponse(
+                    hub.getHubId(),
+                    hub.getHubName(),
+                    hub.getAddress(),
+                    hub.getCityName(),
+                    availableSeats,
+                    imageUrl
+            );
         }).collect(Collectors.toList());
     }
+
 
     public List<TableDetailsResponse> getHubDetails(Long hubId) {
         Hub hub = hubRepository.findById(hubId)

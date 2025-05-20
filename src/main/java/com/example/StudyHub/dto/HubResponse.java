@@ -13,4 +13,6 @@ public class HubResponse {
     private String address;
     private String cityName;
     private int availableSeats;
+    private String imageUrl;
+
 }

@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/hub/**").permitAll()
                         .requestMatchers("/api/hubdetails/**").permitAll()
                         .requestMatchers("/api/cities/**").permitAll()
+                        .requestMatchers("/images/**").permitAll() // ✅ allow static image access
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
