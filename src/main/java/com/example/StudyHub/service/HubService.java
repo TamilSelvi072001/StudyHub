@@ -25,14 +25,12 @@ public class HubService {
         List<Hub> hubs = hubRepository.findAllHubsByCity(city); // Use your actual method here
 
         return hubs.stream().map(hub -> {
-            // Step 1: Count available seats (true for given date)
             int availableSeats = (int) hub.getTables().stream()
                     .flatMap(table -> table.getSeats().stream())
                     .flatMap(seat -> seat.getAvailabilities().stream())
                     .filter(avail -> avail.getDate().equals(date) && Boolean.TRUE.equals(avail.isAvailable()))
                     .count();
 
-            // Step 2: Add seats with no availability record (assumed available)
             int seatsWithoutAvailability = (int) hub.getTables().stream()
                     .flatMap(table -> table.getSeats().stream())
                     .filter(seat -> seat.getAvailabilities().stream()
@@ -41,11 +39,9 @@ public class HubService {
 
             availableSeats += seatsWithoutAvailability;
 
-            // Step 3: Build image URL using hubId
-            int imageIndex = (int) (hub.getHubId() % 7) + 1; // rotates between 1–7
-            String imageUrl = "/images/space" + imageIndex + ".jpg";
+            int imageIndex = (int) (hub.getHubId() % 10) + 1;
+            String imageUrl = "/images/hub" + imageIndex + ".jpg";
 
-            // Step 4: Return response
             return new HubResponse(
                     hub.getHubId(),
                     hub.getHubName(),
