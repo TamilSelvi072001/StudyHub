@@ -39,7 +39,7 @@ public class HubService {
 
             availableSeats += seatsWithoutAvailability;
 
-            int imageIndex = (int) (hub.getHubId() % 10) + 1;
+            int imageIndex = (int) (hub.getHubId() % 9) + 1;
             String imageUrl = "/images/hub" + imageIndex + ".jpg";
 
             return new HubResponse(
