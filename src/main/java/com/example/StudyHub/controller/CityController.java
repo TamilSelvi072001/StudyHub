@@ -22,7 +22,6 @@ public class CityController {
         return cityService.getAllCities();
     }
 
-    // CityController.java
     @GetMapping("/names")
     public List<String> getAllCityNames() {
         return cityService.getAllCityNames();
