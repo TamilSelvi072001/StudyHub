@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/hub/**").permitAll()
                         .requestMatchers("/api/hubdetails/**").permitAll()
                         .requestMatchers("/api/cities/**").permitAll()
+                        .requestMatchers("/api/protected-data").authenticated()
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
