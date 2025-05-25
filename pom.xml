@@ -75,6 +75,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+
 		<!-- Jackson Core (used internally by jjwt-jackson too) -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

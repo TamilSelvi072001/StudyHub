@@ -1,14 +1,18 @@
 package com.example.StudyHub.controller;
 
-import com.example.StudyHub.model.City;
 import com.example.StudyHub.service.CityService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/cities")
-@CrossOrigin(origins = "http://localhost:3000") // Replace with your React frontend URL
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://focus-hub-nine.vercel.app"
+})
+@Slf4j
 public class CityController {
 
     private final CityService cityService;
@@ -17,13 +21,11 @@ public class CityController {
         this.cityService = cityService;
     }
 
-    @GetMapping
-    public List<City> getAllCities() {
-        return cityService.getAllCities();
-    }
-
     @GetMapping("/names")
     public List<String> getAllCityNames() {
-        return cityService.getAllCityNames();
+        long start = System.currentTimeMillis();
+        List<String> cityNames = cityService.getAllCityNames();
+        log.info("Total API duration: {} ms", System.currentTimeMillis() - start);
+        return cityNames;
     }
 }
