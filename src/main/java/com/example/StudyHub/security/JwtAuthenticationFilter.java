@@ -30,7 +30,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+        String path = request.getRequestURI();
 
+        // Allow unauthenticated access to public endpoints
+        if (path.startsWith("/api/book")
+                || path.startsWith("/auth")
+                || path.startsWith("/api/hubdetails")
+                || path.startsWith("/api/cities")
+                || path.startsWith("/hub")
+                || path.startsWith("/images")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String email = null;
@@ -59,15 +70,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-
-        // List public endpoints to skip JWT filter
-        return path.startsWith("/auth") ||
-                path.startsWith("/hub") ||  // covers both /hub and /hub/...
-                path.startsWith("/api/hubdetails/") ||
-                path.startsWith("/api/cities/") ||
-                path.startsWith("/images/");
-    }
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        String path = request.getRequestURI();
+//
+//
+//        // List public endpoints to skip JWT filter
+//        return path.startsWith("/auth") ||
+//                path.startsWith("/hub") ||  // covers both /hub and /hub/...
+//                path.startsWith("/api/hubdetails/") ||
+//                path.startsWith("/api/cities/") ||
+//
+//                path.startsWith("/images/");
+//
+//    }
 }

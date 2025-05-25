@@ -1,4 +1,4 @@
-        package com.example.StudyHub.dto;
+package com.example.StudyHub.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

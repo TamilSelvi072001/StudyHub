@@ -39,6 +39,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/cities/**").permitAll()
                         .requestMatchers("/api/protected-data").authenticated()
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/api/book").permitAll()
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
