@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/hub/**").permitAll()
+                        .requestMatchers("/hub", "/hub/**").permitAll()
                         .requestMatchers("/api/hubdetails/**").permitAll()
                         .requestMatchers("/api/cities/**").permitAll()
                         .requestMatchers("/api/protected-data").authenticated()

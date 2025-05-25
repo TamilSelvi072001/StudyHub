@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "hub_tables")
@@ -30,7 +31,7 @@ public class HubTable {
 
     // One table has many seats
     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Seat> seats = new ArrayList<>();
+    private Set<Seat> seats;
 
     // Custom constructor without the collections to avoid circular references
     public HubTable(Long tableId, String tableNumber, Hub hub) {

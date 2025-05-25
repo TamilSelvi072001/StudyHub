@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "seats")
@@ -30,6 +31,6 @@ public class Seat {
 
     // One seat can have many availability entries (one per date)
     @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Availability> availabilities;  // <-- use plural here
+    private Set<Availability> availabilities;  // <-- use plural here
 
 }

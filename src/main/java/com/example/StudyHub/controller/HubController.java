@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/hub")
 @RequiredArgsConstructor
@@ -23,23 +24,12 @@ public class HubController {
             @RequestParam String city,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
-        return hubService.getHubsWithAvailability(city, date);
+        long start = System.currentTimeMillis();
+        List<HubResponse> response = hubService.getHubsWithAvailability(city, date);
+        long end = System.currentTimeMillis();
+        System.out.println("[Controller] getHubs executed in " + (end - start) + " ms");
+        return response;
     }
 
-    @RestController
-    @RequestMapping("/hubdetails")
-    public class HubDetailsController {
 
-        private final HubService hubService;
-
-        public HubDetailsController(HubService hubService) {
-            this.hubService = hubService;
-        }
-
-        @GetMapping("/{hubId}")
-        public ResponseEntity<List<TableDetailsResponse>> getHubDetails(@PathVariable Long hubId) {
-            List<TableDetailsResponse> tableDetails = hubService.getHubDetails(hubId);
-            return ResponseEntity.ok(tableDetails);
-        }
-    }
 }
